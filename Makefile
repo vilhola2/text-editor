@@ -16,7 +16,7 @@ all: text_editor
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $^
 
 text_editor: $(OBJECTS)
-	$(CC) $(CFLAGS) -o obj/$@ $(OBJ)
+	$(CC) $(CFLAGS) -o bin/$@ $(OBJ)
 
 clean:
 	rm $(OBJ)
