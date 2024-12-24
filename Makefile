@@ -6,9 +6,9 @@ OBJ=$(OBJ_DIR)*.o
 
 OBJECTS=\
 		text_editor.o \
-		str_functions.o \
-		file_functions.o \
-		input_functions.o \
+		string.o \
+		file.o \
+		io.o \
 
 all: text_editor
 
