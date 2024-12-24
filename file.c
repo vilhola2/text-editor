@@ -4,7 +4,7 @@
 #include <string.h>
 
 // Returns contents of a file as a string
-char *file_to_str(char *filename, size_t *size) {
+char *file_read(char *filename, size_t *size) {
     FILE *pF = fopen(filename, "r");
     if(pF == NULL) return NULL;
     fseek(pF, 0, SEEK_END);
@@ -16,6 +16,7 @@ char *file_to_str(char *filename, size_t *size) {
     return input;
 }
 
+// Writes a string to a file
 void file_write(char *filename, char *input) {
     FILE *pF = fopen(filename, "w");
     if(pF == NULL) {

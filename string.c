@@ -5,8 +5,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+int32_t str_get_line_count(char *input) {
+    char *buffer = input;
+    int line_count = 0;
+    while((buffer = strchr(buffer, '\n')) != NULL) {
+        ++buffer;
+        ++line_count;
+    }
+    return line_count;
+}
+
 // Reads a string from the user
-void str_get(char *target, size_t *size) {
+void str_input(char *target, size_t *size) {
     while(1) {
         if(fgets(target, *size, stdin) == NULL) {
             printf("Failed to read input (NULL)\n");
@@ -22,13 +32,13 @@ void str_get(char *target, size_t *size) {
     }
 }
 
-//  Prints a string with line numbers and writes the line count into the callers variable
+// Prints a string with line numbers and writes the line count into the callers variable
 void str_print(char *input, int32_t *line_number) {
     *line_number = 1;
     char *start = input;
     char *end;
 
-    putchar('\n'); // Formatting
+    putchar('\n');
     while((end = strchr(start, '\n')) != NULL) {
         printf("%d  %.*s\n", (*line_number)++, (int)(end - start), start);
         start = end + 1;
@@ -36,10 +46,10 @@ void str_print(char *input, int32_t *line_number) {
     if(*start != '\0') {
         printf("%d  %s\n", *line_number, start);
     }
-    putchar('\n'); // More formatting
+    putchar('\n');
 }
 
-// modifies a string to be only 1 line
+// Modifies a string to be only 1 line ( Unused for now )
 void str_reduce(char *input) {
     if(strchr(input, '\n') == NULL) return;
     int i = 0;

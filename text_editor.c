@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 
 void main_loop(char *filename) {
     size_t size;
-    char *buffer = file_to_str(filename, &size);
+    char *buffer = file_read(filename, &size);
     if(buffer == NULL) {
         printf("Error reading file!\n");
         return;
@@ -52,6 +52,7 @@ void main_loop(char *filename) {
             case 'e':
                 current_line = get_current_line(line_count);
                 edit_line(buffer, current_line, &size);
+                line_count = str_get_line_count(buffer);
                 break;
             default:
                 printf("Invalid option! Try again:\n");
@@ -74,7 +75,7 @@ void edit_line(char *buffer, int32_t current_line, size_t *size) {
         buffer = strchr(buffer, '\n') + 1;
     }
     char *line_end = strchr(buffer, '\n');
-    str_get(buffer, size);
+    str_input(buffer, size);
     strcpy(buffer + strlen(buffer), line_end);
 }
 

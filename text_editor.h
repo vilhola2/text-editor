@@ -6,10 +6,11 @@
 
 void clear_input_buffer();
 
-char *file_to_str(char *filename, size_t *size);
+char *file_read(char *filename, size_t *size);
 void file_write(char *filename, char *input);
 
-void str_get(char *target, size_t *size);
+int32_t str_get_line_count(char *buffer);
+void str_input(char *target, size_t *size);
 void str_print(char *input, int32_t *line_count);
 void str_reduce(char *input);
 
