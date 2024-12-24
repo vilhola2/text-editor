@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void main_loop(char *input, size_t size, char **argv);
+void main_loop(char *filename);
 void print_help();
 void edit_line(char *buffer, int32_t current_line, size_t *size);
 int32_t get_current_line(int32_t line_num);
@@ -15,39 +15,36 @@ int main(int argc, char **argv) {
         printf("Usage: %s 'file_name'\n", argv[0]);
         return EXIT_FAILURE;
     }
-
-    size_t size;
-    char *buffer = file_to_str(argv[1], &size);
-    if(buffer == NULL) {
-        printf("Error reading file!\n");
-        return EXIT_FAILURE;
-    }
-
-    main_loop(buffer, size, argv);
-
-    free(buffer);
+    main_loop(argv[1]);
     return EXIT_SUCCESS;
 }
 
-void main_loop(char *buffer, size_t size, char **argv) {
+void main_loop(char *filename) {
+    size_t size;
+    char *buffer = file_to_str(filename, &size);
+    if(buffer == NULL) {
+        printf("Error reading file!\n");
+        return;
+    }
+
     int32_t line_count = 0;
     int32_t current_line;
 
     str_print(buffer, &line_count);
     printf("Enter 'h' to see a list of commands or 'q' to quit\n");
     char opt;
-    while(1) {
+    while(opt != 'q') {
         printf("> ");
         scanf(" %c", &opt);
         clear_input_buffer();
         switch (opt) {
             case 'q':
-                return;
+                break;
             case 'h':
                 print_help();
                 break;
             case 'w':
-                file_write(argv[1], buffer);
+                file_write(filename, buffer);
                 break;
             case 'p':
                 str_print(buffer, &line_count);
@@ -60,6 +57,7 @@ void main_loop(char *buffer, size_t size, char **argv) {
                 printf("Invalid option! Try again:\n");
         }
     }
+    free(buffer);
 }
 
 void print_help() {
