@@ -50,7 +50,7 @@ void main_loop(char *filename) {
             case 'e':
                 current_line = get_current_line(line_count);
                 printf("Current line: %d\n", current_line);
-				buffer = edit_line(buffer, current_line);
+                buffer = edit_line(buffer, current_line);
                 line_count = str_get_line_count(buffer);
                 printf("Line count: %d\n", line_count);
                 break;
@@ -89,17 +89,16 @@ char *edit_line(char *buffer, int32_t current_line) {
         return NULL;
     }
 
-	printf("buffer_start: %s\n", buffer_start);
-	printf("newline: %s\n", newline);
-	printf("buffer_end: %s\n", buffer_end);
-	size_t size = strlen(buffer_start) + newline_size + strlen(buffer_end) + 1;
-	char *new_buffer = malloc(size);
-	sprintf(new_buffer, "%s%s%s",
-			buffer_start, newline, buffer_end);
-	printf("\n%s\n", new_buffer);
+    printf("buffer_start: %s\n", buffer_start);
+    printf("newline: %s\n", newline);
+    printf("buffer_end: %s\n", buffer_end);
+    size_t size = strlen(buffer_start) + newline_size + strlen(buffer_end) + 1;
+    char *new_buffer = malloc(size);
+    sprintf(new_buffer, "%s%s%s", buffer_start, newline, buffer_end);
+    printf("\n%s\n", new_buffer);
 
     free(newline);
-	free(buffer);
+    free(buffer);
     free(buffer_start);
     return new_buffer;
 }
