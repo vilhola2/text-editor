@@ -3,12 +3,14 @@ CC=gcc
 
 OBJ_DIR=obj/
 OBJ=$(OBJ_DIR)*.o
+BIN=text_editor
+BIN_DIR=bin/
 
 OBJECTS=\
-		text_editor.o \
-		string.o \
+		main.o \
 		file.o \
 		io.o \
+		string.o \
 
 all: text_editor
 
@@ -16,7 +18,7 @@ all: text_editor
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $^
 
 text_editor: $(OBJECTS)
-	$(CC) $(CFLAGS) -o bin/$@ $(OBJ)
+	$(CC) $(CFLAGS) -o $(BIN_DIR)$(BIN) $(OBJ)
 
 clean:
 	rm $(OBJ)
