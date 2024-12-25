@@ -45,7 +45,8 @@ void main_loop(char *filename) {
             case 'p':
                 str_print(buffer, &line_count);
                 break;
-            case 'e': current_line = get_current_line(line_count);
+            case 'e':
+                current_line = get_current_line(line_count);
                 if(edit_line(buffer, current_line) == ERR) return;
                 line_count = str_get_line_count(buffer);
                 break;

@@ -37,13 +37,13 @@ char *str_input(size_t *bufsize) {
 
 // Prints a string with line numbers and writes the line count into the callers variable
 void str_print(char *input, int32_t *line_number) {
-    *line_number = 1;
+    *line_number = 0;
     char *start = input;
     char *end;
 
     putchar('\n');
     while((end = strchr(start, '\n')) != NULL) {
-        printf("%d  %.*s\n", (*line_number)++, (int)(end - start), start);
+        printf("%d  %.*s\n", ++(*line_number), (int)(end - start), start);
         start = end + 1;
     }
     if(*start != '\0') {
