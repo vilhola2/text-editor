@@ -47,7 +47,7 @@ void str_print(char *input, int32_t *line_number) {
         start = end + 1;
     }
     if(*start != '\0') {
-        printf("%d  %s\n", *line_number, start);
+        printf("%d  %s\n", ++(*line_number), start);
     }
     putchar('\n');
 }

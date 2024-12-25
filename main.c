@@ -27,6 +27,8 @@ void main_loop(char *filename) {
     int32_t current_line;
 
     str_print(buffer, &line_count);
+    printf("Line count: %d\n", line_count);
+
     printf("Enter 'h' to see a list of commands or 'q' to quit\n");
     char opt;
     while(opt != 'q') {
@@ -47,8 +49,10 @@ void main_loop(char *filename) {
                 break;
             case 'e':
                 current_line = get_current_line(line_count);
+                printf("Current line: %d\n", current_line);
                 if(edit_line(buffer, current_line) == ERR) return;
                 line_count = str_get_line_count(buffer);
+                printf("Line count: %d\n", line_count);
                 break;
             default:
                 printf("Invalid option! Try again:\n");
@@ -86,7 +90,7 @@ int32_t edit_line(char *buffer, int32_t current_line) {
         return ERR;
     }
 
-    buffer = realloc(buffer, strlen(buffer_start) + newline_size + strlen(buffer_end));
+    buffer = realloc(buffer, strlen(buffer_start) + newline_size + strlen(buffer_end) + 1);
     strcpy(buffer, buffer_start);
     strcat(buffer, newline);
     strcat(buffer, buffer_end);
