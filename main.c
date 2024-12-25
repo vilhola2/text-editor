@@ -6,8 +6,8 @@
 #include <string.h>
 
 void main_loop(char *filename);
-void print_help();
-int32_t edit_line(char *buffer, int32_t current_line);
+void print_help(void);
+char *edit_line(char *buffer, int32_t current_line);
 int32_t get_current_line(int32_t line_count);
 
 int main(int argc, char **argv) {
@@ -50,7 +50,7 @@ void main_loop(char *filename) {
             case 'e':
                 current_line = get_current_line(line_count);
                 printf("Current line: %d\n", current_line);
-                if(edit_line(buffer, current_line) == ERR) return;
+				buffer = edit_line(buffer, current_line);
                 line_count = str_get_line_count(buffer);
                 printf("Line count: %d\n", line_count);
                 break;
@@ -61,7 +61,7 @@ void main_loop(char *filename) {
     free(buffer);
 }
 
-void print_help() {
+void print_help(void) {
     printf( "'p' -- print the contents of the buffer\n"
             "'e' -- edit a single line\n"
             // todo "'a' -- append a single line to the end of the buffer"
@@ -69,7 +69,7 @@ void print_help() {
             "'q' -- quit\n");
 }
 
-int32_t edit_line(char *buffer, int32_t current_line) {
+char *edit_line(char *buffer, int32_t current_line) {
     char *buffer_start = strdup(buffer);
     char *buffer_end = buffer;
 
@@ -86,18 +86,22 @@ int32_t edit_line(char *buffer, int32_t current_line) {
         printf("Function str_input failed!\n");
         free(buffer);
         free(buffer_start);
-        free(newline);
-        return ERR;
+        return NULL;
     }
 
-    buffer = realloc(buffer, strlen(buffer_start) + newline_size + strlen(buffer_end) + 1);
-    strcpy(buffer, buffer_start);
-    strcat(buffer, newline);
-    strcat(buffer, buffer_end);
+	printf("buffer_start: %s\n", buffer_start);
+	printf("newline: %s\n", newline);
+	printf("buffer_end: %s\n", buffer_end);
+	size_t size = strlen(buffer_start) + newline_size + strlen(buffer_end) + 1;
+	char *new_buffer = malloc(size);
+	sprintf(new_buffer, "%s%s%s",
+			buffer_start, newline, buffer_end);
+	printf("\n%s\n", new_buffer);
 
     free(newline);
+	free(buffer);
     free(buffer_start);
-    return NOERR;
+    return new_buffer;
 }
 
 int32_t get_current_line(int32_t line_count) {

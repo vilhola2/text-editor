@@ -7,7 +7,7 @@
 #define ERR 1
 #define NOERR 0
 
-void clear_input_buffer();
+void clear_input_buffer(void);
 
 char *file_read(char *filename);
 void file_write(char *filename, char *input);
