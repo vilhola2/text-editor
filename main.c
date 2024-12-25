@@ -80,8 +80,7 @@ char *edit_line(char *buffer, int32_t current_line) {
     buffer_start[buffer_end - buffer] = '\0';
     buffer_end = strchr(buffer_end, '\n');
 
-    size_t newline_size = 16;
-    char *newline = str_input(&newline_size);
+    char *newline = str_input();
     if(!newline) {
         printf("Function str_input failed!\n");
         free(buffer);
@@ -92,7 +91,7 @@ char *edit_line(char *buffer, int32_t current_line) {
     printf("buffer_start: %s\n", buffer_start);
     printf("newline: %s\n", newline);
     printf("buffer_end: %s\n", buffer_end);
-    size_t size = strlen(buffer_start) + newline_size + strlen(buffer_end) + 1;
+    size_t size = strlen(buffer_start) + strlen(newline) + strlen(buffer_end) + 1;
     char *new_buffer = malloc(size);
     sprintf(new_buffer, "%s%s%s", buffer_start, newline, buffer_end);
     printf("\n%s\n", new_buffer);

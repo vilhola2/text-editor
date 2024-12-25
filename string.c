@@ -16,15 +16,16 @@ int32_t str_get_line_count(char *input) {
 }
 
 // Magic user input reading function
-char *str_input(size_t *bufsize) {
+char *str_input(void) {
     int ch;
     size_t len = 0;
-    char *buffer = malloc(*bufsize);
+    size_t bufsize = 16;
+    char *buffer = malloc(bufsize);
     if(!buffer) return NULL;
     while((ch = fgetc(stdin)) != EOF && ch != '\n') {
         buffer[len++] = ch;
-        if(len == *bufsize) {
-            char *temp = realloc(buffer, (*bufsize += 16));
+        if(len == bufsize) {
+            char *temp = realloc(buffer, (bufsize += 16));
             if(!temp) {
                 free(buffer);
                 return NULL;

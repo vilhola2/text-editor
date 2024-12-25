@@ -13,7 +13,7 @@ char *file_read(char *filename);
 void file_write(char *filename, char *input);
 
 int32_t str_get_line_count(char *buffer);
-char *str_input(size_t *bufsize);
+char *str_input(void);
 void str_print(char *input, int32_t *line_count);
 void str_reduce(char *input);
 
