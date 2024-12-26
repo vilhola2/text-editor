@@ -22,3 +22,6 @@ text_editor: $(OBJECTS)
 
 clean:
 	rm $(OBJ)
+
+clean_bin: clean
+	rm $(BIN_DIR)$(BIN)
