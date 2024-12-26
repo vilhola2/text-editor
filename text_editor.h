@@ -4,8 +4,7 @@
 #ifndef TEXT_EDITOR_H
 #define TEXT_EDITOR_H
 
-#define ERR 1
-#define NOERR 0
+#define ERR 0
 
 void clear_input_buffer(void);
 
@@ -13,7 +12,7 @@ char *file_read(char *filename);
 void file_write(char *filename, char *input);
 
 int32_t str_get_line_count(char *buffer);
-char *str_input(void);
+char *str_input(FILE *stream);
 void str_print(char *input, int32_t *line_count);
 void str_reduce(char *input);
 

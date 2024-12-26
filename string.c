@@ -15,25 +15,42 @@ int32_t str_get_line_count(char *input) {
     return line_count;
 }
 
-// Magic user input reading function
-char *str_input(void) {
+// Reads input from a given file stream and returns a heap-allocated string
+char *str_input(FILE *stream) {
     int ch;
     size_t len = 0;
     size_t bufsize = 16;
     char *buffer = malloc(bufsize);
-    if(!buffer) return NULL;
-    while((ch = fgetc(stdin)) != EOF && ch != '\n') {
+    if(!buffer) {
+        printf("Initial allocation failed!\n");
+        return NULL;
+    }
+
+    while((ch = fgetc(stream)) != EOF && ch != '\n') {
         buffer[len++] = ch;
         if(len == bufsize) {
             char *temp = realloc(buffer, (bufsize += 16));
             if(!temp) {
+                printf("Realloc failed!\n");
                 free(buffer);
                 return NULL;
             }
+            buffer = temp;
         }
     }
-    buffer[len++] = '\0';
-    return realloc(buffer, len);
+
+    if(len < bufsize) {
+        char *temp = realloc(buffer, len + 1);
+        if(!temp) {
+            printf("Realloc failed!\n");
+            free(buffer);
+            return NULL;
+        }
+        buffer = temp;
+    }
+
+    buffer[len] = '\0';
+    return buffer;
 }
 
 // Prints a string with line numbers and writes the line count into the callers variable
