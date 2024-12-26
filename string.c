@@ -54,9 +54,6 @@ void str_print(char *input, int32_t *line_count) {
         printf("%d  %.*s\n", ++(*line_count), (int)(end - start), start);
         start = end + 1;
     }
-    if(*start != '\0') {
-        printf("%d  %s\n", ++(*line_count), start);
-    }
     putchar('\n');
 }
 
