@@ -5,16 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int32_t str_get_line_count(char *input) {
-    char *buffer = input;
-    int line_count = 0;
-    while((buffer = strchr(buffer, '\n')) != NULL) {
-        ++buffer;
-        ++line_count;
-    }
-    return line_count;
-}
-
 // Reads input from a given file stream and returns a heap-allocated string
 char *str_input(FILE *stream) {
     int ch;
@@ -53,21 +43,32 @@ char *str_input(FILE *stream) {
     return buffer;
 }
 
-// Prints a string with line numbers and writes the line count into the callers variable
-void str_print(char *input, int32_t *line_number) {
-    *line_number = 0;
+// Prints a string with line numbers and counts newlines
+void str_print(char *input, int32_t *line_count) {
+    *line_count = 0;
     char *start = input;
     char *end;
 
     putchar('\n');
     while((end = strchr(start, '\n')) != NULL) {
-        printf("%d  %.*s\n", ++(*line_number), (int)(end - start), start);
+        printf("%d  %.*s\n", ++(*line_count), (int)(end - start), start);
         start = end + 1;
     }
     if(*start != '\0') {
-        printf("%d  %s\n", ++(*line_number), start);
+        printf("%d  %s\n", ++(*line_count), start);
     }
     putchar('\n');
+}
+
+// Counts all newline characters in a string
+int32_t str_get_line_count(char *input) {
+    char *buffer = input;
+    int line_count = 0;
+    while((buffer = strchr(buffer, '\n')) != NULL) {
+        ++buffer;
+        ++line_count;
+    }
+    return line_count;
 }
 
 // Modifies a string to be only 1 line ( Unused for now )

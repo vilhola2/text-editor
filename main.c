@@ -7,8 +7,8 @@
 
 void main_loop(char *filename);
 void print_help(void);
-char *edit_line(char *buffer, int32_t current_line);
 int32_t get_current_line(int32_t line_count);
+char *edit_line(char *buffer, int32_t current_line);
 
 int main(int argc, char **argv) {
     if(argc != 2) {
@@ -27,8 +27,6 @@ void main_loop(char *filename) {
     int32_t current_line;
 
     str_print(buffer, &line_count);
-    printf("Line count: %d\n", line_count);
-
     printf("Enter 'h' to see a list of commands or 'q' to quit\n");
     char opt;
     while(opt != 'q') {
@@ -49,10 +47,12 @@ void main_loop(char *filename) {
                 break;
             case 'e':
                 current_line = get_current_line(line_count);
-                printf("Current line: %d\n", current_line);
                 buffer = edit_line(buffer, current_line);
+                if(buffer == NULL) {
+                    printf("FATAL: NULL at edit_line\n");
+                    return;
+                }
                 line_count = str_get_line_count(buffer);
-                printf("Line count: %d\n", line_count);
                 break;
             default:
                 printf("Invalid option! Try again:\n");
@@ -67,39 +67,6 @@ void print_help(void) {
             // todo "'a' -- append a single line to the end of the buffer"
             "'h' -- print this list\n"
             "'q' -- quit\n");
-}
-
-char *edit_line(char *buffer, int32_t current_line) {
-    char *buffer_start = strdup(buffer);
-    char *buffer_end = buffer;
-
-    for(int i = 1; i < current_line; ++i) {
-        buffer_end = strchr(buffer_end, '\n') + 1;
-    }
-
-    buffer_start[buffer_end - buffer] = '\0';
-    buffer_end = strchr(buffer_end, '\n');
-
-    char *newline = str_input(stdin);
-    if(newline == NULL) {
-        printf("Function str_input failed!\n");
-        free(buffer);
-        free(buffer_start);
-        return NULL;
-    }
-
-    printf("buffer_start: %s\n", buffer_start);
-    printf("newline: %s\n", newline);
-    printf("buffer_end: %s\n", buffer_end);
-    size_t size = strlen(buffer_start) + strlen(newline) + strlen(buffer_end) + 1;
-    char *new_buffer = malloc(size);
-    sprintf(new_buffer, "%s%s%s", buffer_start, newline, buffer_end);
-    printf("\n%s\n", new_buffer);
-
-    free(newline);
-    free(buffer);
-    free(buffer_start);
-    return new_buffer;
 }
 
 int32_t get_current_line(int32_t line_count) {
@@ -121,4 +88,36 @@ int32_t get_current_line(int32_t line_count) {
         break;
     }
     return current_line;
+}
+
+char *edit_line(char *buffer, int32_t current_line) {
+    char *buffer_start = strdup(buffer);
+    char *buffer_end = buffer;
+
+    for(int i = 1; i < current_line; ++i) {
+        buffer_end = strchr(buffer_end, '\n') + 1;
+    }
+
+    buffer_start[buffer_end - buffer] = '\0';
+    buffer_end = strchr(buffer_end, '\n');
+
+    char *newline = str_input(stdin);
+    if(newline == NULL) {
+        free(buffer);
+        free(buffer_start);
+        return NULL;
+    }
+
+    char *new_buffer = malloc (
+            strlen(buffer_start) + 
+            strlen(newline) + 
+            strlen(buffer_end) + 1
+            );
+
+    sprintf(new_buffer, "%s%s%s", buffer_start, newline, buffer_end);
+
+    free(newline);
+    free(buffer);
+    free(buffer_start);
+    return new_buffer;
 }
