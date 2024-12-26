@@ -80,8 +80,8 @@ char *edit_line(char *buffer, int32_t current_line) {
     buffer_start[buffer_end - buffer] = '\0';
     buffer_end = strchr(buffer_end, '\n');
 
-    char *newline = str_input();
-    if(!newline) {
+    char *newline = str_input(stdin);
+    if(newline == NULL) {
         printf("Function str_input failed!\n");
         free(buffer);
         free(buffer_start);
