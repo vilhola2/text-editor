@@ -67,14 +67,3 @@ int32_t str_get_line_count(char *input) {
     }
     return line_count;
 }
-
-// Modifies a string to be only 1 line ( Unused for now )
-void str_reduce(char *input) {
-    if(strchr(input, '\n') == NULL) return;
-    int i = 0;
-    while(1) {
-        if(input[i] == '\n') break;
-        ++i;
-    }
-    input[i+1] = '\0';
-}
