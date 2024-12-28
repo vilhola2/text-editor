@@ -9,6 +9,7 @@ void main_loop(char *filename);
 void print_help(void);
 int32_t get_current_line(int32_t line_count);
 char *edit_line(char *buffer, int32_t current_line);
+char *add_line(char *buffer, const char mode);
 
 int main(int argc, char **argv) {
     if(argc != 2) {
@@ -52,7 +53,14 @@ void main_loop(char *filename) {
                     printf("FATAL: NULL at edit_line\n");
                     return;
                 }
-                line_count = str_get_line_count(buffer);
+                break;
+            case 'a':
+                line_count += 1;
+                buffer = add_line(buffer, 'a');
+                break;
+            case 'i':
+                line_count += 1;
+                buffer = add_line(buffer, 'i');
                 break;
             default:
                 printf("Invalid option! Try again:\n");
@@ -64,7 +72,8 @@ void main_loop(char *filename) {
 void print_help(void) {
     printf( "'p' -- print the contents of the buffer\n"
             "'e' -- edit a single line\n"
-            // todo "'a' -- append a single line to the end of the buffer"
+            "'a' -- append a single line to the end of the buffer\n"
+            "'i' -- insert a single line to the start of the buffer\n"
             "'h' -- print this list\n"
             "'q' -- quit\n");
 }
@@ -88,6 +97,29 @@ int32_t get_current_line(int32_t line_count) {
         break;
     }
     return current_line;
+}
+
+char *add_line(char *buffer, const char mode) {
+    char *newline;
+    char *new_buffer;
+
+    switch(mode) {
+        case 'a':
+            newline = str_input(stdin);
+            new_buffer = malloc(strlen(buffer) + strlen(newline) + 2);
+            sprintf(new_buffer, "%s%s\n", buffer, newline);
+            break;
+        case 'i':
+            newline = str_input(stdin);
+            new_buffer = malloc(strlen(buffer) + strlen(newline) + 2);
+            sprintf(new_buffer, "%s\n%s", newline, buffer);
+            break;
+        default: return NULL;
+    }
+
+    free(newline);
+    free(buffer);
+    return new_buffer;
 }
 
 char *edit_line(char *buffer, int32_t current_line) {
