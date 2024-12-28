@@ -32,8 +32,7 @@ void main_loop(char *filename) {
     char opt;
     while(opt != 'q') {
         printf("> ");
-        scanf(" %c", &opt);
-        clear_input_buffer();
+        if((opt = getchar()) != '\n') clear_input_buffer();
         switch (opt) {
             case 'q':
                 break;
@@ -47,7 +46,7 @@ void main_loop(char *filename) {
                 str_print(buffer, &line_count);
                 break;
             case 'e':
-                current_line = get_current_line(line_count);
+                if(!(current_line = get_current_line(line_count))) continue;
                 buffer = edit_line(buffer, current_line);
                 if(buffer == NULL) {
                     printf("FATAL: NULL at edit_line\n");
@@ -63,7 +62,7 @@ void main_loop(char *filename) {
                 buffer = add_line(buffer, 'i');
                 break;
             default:
-                printf("Invalid option! Try again:\n");
+                printf("Invalid option!\n");
         }
     }
     free(buffer);
@@ -79,24 +78,19 @@ void print_help(void) {
 }
 
 int32_t get_current_line(int32_t line_count) {
-    int current_line;
     printf("Enter line number: ");
-    while(1) {
-        if(!scanf("%d", &current_line)) {
-            printf("Invalid line number!\n");
-            printf("Try again: ");
-            clear_input_buffer();
-            continue;
-        }
-        clear_input_buffer();
-        if(current_line < 1 || current_line > line_count) {
-            printf("Error: Non-existent line!\n");
-            printf("Try again: ");
-            continue;
-        }
-        break;
+    char *str = str_input(stdin);
+    char *endptr;
+    long current_line = strtol(str, &endptr, 0);
+    if(*endptr != '\0') {
+        printf("Invalid number\n");
+        return 0;
     }
-    return current_line;
+    if(current_line > line_count || current_line <= 0) {
+        printf("Invalid line number\n");
+        return 0;
+    }
+    return (int32_t)current_line;
 }
 
 char *add_line(char *buffer, const char mode) {
