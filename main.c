@@ -7,15 +7,18 @@
 
 void main_loop(char *filename);
 void print_help(void);
-int32_t get_current_line(int32_t line_count);
-char *edit_line(char *buffer, int32_t current_line);
+void remove_line(char *buffer, int32_t current_line);
+char *add_empty_line(char *buffer, int32_t current_line);
 char *add_line(char *buffer, const char mode);
+char *edit_line(char *buffer, int32_t current_line);
+int32_t get_current_line(int32_t line_count);
 
 int main(int argc, char **argv) {
     if(argc != 2) {
         printf("Usage: %s 'file_name'\n", argv[0]);
         return EXIT_FAILURE;
     }
+
     main_loop(argv[1]);
     return EXIT_SUCCESS;
 }
@@ -45,6 +48,11 @@ void main_loop(char *filename) {
             case 'p':
                 str_print(buffer, &line_count);
                 break;
+            case 'd':
+                if(!(current_line = get_current_line(line_count))) continue;
+                remove_line(buffer, current_line);
+                line_count -= 1;
+                break;
             case 'e':
                 if(!(current_line = get_current_line(line_count))) continue;
                 buffer = edit_line(buffer, current_line);
@@ -52,6 +60,12 @@ void main_loop(char *filename) {
                     printf("FATAL: NULL at edit_line\n");
                     return;
                 }
+                break;
+            case 'n':
+                line_count += 1;
+                if(!(current_line = get_current_line(line_count))) continue;
+                buffer = add_empty_line(buffer, current_line);
+                buffer = edit_line(buffer, current_line + 1);
                 break;
             case 'a':
                 line_count += 1;
@@ -69,12 +83,16 @@ void main_loop(char *filename) {
 }
 
 void print_help(void) {
-    printf( "'p' -- print the contents of the buffer\n"
-            "'e' -- edit a single line\n"
-            "'a' -- append a single line to the end of the buffer\n"
-            "'i' -- insert a single line to the start of the buffer\n"
-            "'h' -- print this list\n"
-            "'q' -- quit\n");
+    printf(
+        "'p' -- print the contents of the buffer\n"
+        "'d' -- delete a single line\n"
+        "'e' -- edit a single line\n"
+        "'a' -- append a single line to the end of the buffer\n"
+        "'i' -- insert a single line to the start of the buffer\n"
+        "'n' -- add a single line after the specified line number\n"
+        "'h' -- print this list\n"
+        "'q' -- quit\n"
+    );
 }
 
 int32_t get_current_line(int32_t line_count) {
@@ -91,6 +109,42 @@ int32_t get_current_line(int32_t line_count) {
         return 0;
     }
     return (int32_t)current_line;
+}
+
+void remove_line(char *buffer, int32_t current_line) {
+    char *end = buffer;
+
+    for(int i = 1; i < current_line; ++i) {
+        end = strchr(end, '\n') + 1;
+    }
+
+    size_t len = end - buffer;
+    end = strchr(end, '\n') + 1;
+    memmove(buffer + len, end, strlen(end) + 1);
+}
+
+char *add_empty_line(char *buffer, int32_t current_line) {
+    char *p_buffer = buffer;
+
+    for(int i = 0; i < current_line; ++i) {
+        p_buffer = strchr(p_buffer, '\n') + 1;
+    }
+
+    char *new_buffer = malloc(strlen(buffer) + 2);
+    if(!new_buffer) {
+        free(buffer);
+        printf("Error\n");
+        return NULL;
+    }
+
+    sprintf(new_buffer, "%.*s\n%s",
+        (int)(p_buffer - buffer),
+        buffer,
+        p_buffer
+    );
+    
+    free(buffer);
+    return new_buffer;
 }
 
 char *add_line(char *buffer, const char mode) {
@@ -135,12 +189,16 @@ char *edit_line(char *buffer, int32_t current_line) {
     }
 
     char *new_buffer = malloc (
-            strlen(buffer_start) + 
-            strlen(newline) + 
-            strlen(buffer_end) + 1
-            );
+        strlen(buffer_start) + 
+        strlen(newline) + 
+        strlen(buffer_end) + 1
+    );
 
-    sprintf(new_buffer, "%s%s%s", buffer_start, newline, buffer_end);
+    sprintf(new_buffer, "%s%s%s",
+        buffer_start,
+        newline,
+        buffer_end
+    );
 
     free(newline);
     free(buffer);
