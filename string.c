@@ -12,7 +12,7 @@ char *str_input(FILE *stream) {
     size_t bufsize = 16;
     char *buffer = malloc(bufsize);
     if(!buffer) {
-        printf("Initial allocation failed!\n");
+        printf("str_input: Malloc failed\n");
         return NULL;
     }
 
@@ -21,7 +21,7 @@ char *str_input(FILE *stream) {
         if(len == bufsize) {
             char *temp = realloc(buffer, (bufsize += 16));
             if(!temp) {
-                printf("Realloc failed!\n");
+                printf("str_input: Realloc failed\n");
                 free(buffer);
                 return NULL;
             }
@@ -32,7 +32,7 @@ char *str_input(FILE *stream) {
     if(len < bufsize) {
         char *temp = realloc(buffer, len + 1);
         if(!temp) {
-            printf("Realloc failed!\n");
+            printf("str_input: Realloc failed\n");
             free(buffer);
             return NULL;
         }
@@ -57,7 +57,7 @@ void str_print(char *input, int32_t *line_count) {
     putchar('\n');
 }
 
-// Counts all newline characters in a string
+// Counts all newline characters in a string (unused)
 int32_t str_get_line_count(char *input) {
     char *buffer = input;
     int line_count = 0;

@@ -7,7 +7,7 @@
 char *file_read(char *filename) {
     FILE *pF = fopen(filename, "r");
     if(pF == NULL) {
-        printf("Failed to open file for reading!\n");
+        printf("file_read: Failed to open file for reading\n");
         return NULL;
     }
     fseek(pF, 0, SEEK_END);
@@ -23,7 +23,7 @@ char *file_read(char *filename) {
 void file_write(char *filename, char *input) {
     FILE *pF = fopen(filename, "w");
     if(pF == NULL) {
-        printf("Failed to open file for writing!\n");
+        printf("file_write: Failed to open file for writing\n");
         return;
     }
     fwrite(input, strlen(input), 1, pF);

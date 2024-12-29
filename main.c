@@ -129,7 +129,7 @@ char *add_empty_line(char *buffer, int32_t current_line) {
     char *new_buffer = malloc(strlen(buffer) + 2);
     if(!new_buffer) {
         free(buffer);
-        printf("Malloc failed in add_empty_line\n");
+        printf("add_empty_line: Malloc failed\n");
         return NULL;
     }
 
@@ -159,7 +159,7 @@ char *add_line(char *buffer, const char mode) {
             sprintf(new_buffer, "%s\n%s", newline, buffer);
             break;
         default:
-            printf("Bad mode for add_line\n");
+            printf("add_line: Bad mode\n");
             return NULL;
     }
 
