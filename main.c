@@ -55,17 +55,13 @@ void main_loop(char *filename) {
                 break;
             case 'e':
                 if(!(current_line = get_current_line(line_count))) continue;
-                buffer = edit_line(buffer, current_line);
-                if(buffer == NULL) {
-                    printf("FATAL: NULL at edit_line\n");
-                    return;
-                }
+                if(!(buffer = edit_line(buffer, current_line))) return;
                 break;
             case 'n':
                 line_count += 1;
                 if(!(current_line = get_current_line(line_count))) continue;
-                buffer = add_empty_line(buffer, current_line);
-                buffer = edit_line(buffer, current_line + 1);
+                if(!(buffer = add_empty_line(buffer, current_line))) return;
+                if(!(buffer = edit_line(buffer, current_line + 1))) return;
                 break;
             case 'a':
                 line_count += 1;
@@ -133,7 +129,7 @@ char *add_empty_line(char *buffer, int32_t current_line) {
     char *new_buffer = malloc(strlen(buffer) + 2);
     if(!new_buffer) {
         free(buffer);
-        printf("Error\n");
+        printf("Malloc failed in add_empty_line\n");
         return NULL;
     }
 
@@ -162,7 +158,9 @@ char *add_line(char *buffer, const char mode) {
             new_buffer = malloc(strlen(buffer) + strlen(newline) + 2);
             sprintf(new_buffer, "%s\n%s", newline, buffer);
             break;
-        default: return NULL;
+        default:
+            printf("Bad mode for add_line\n");
+            return NULL;
     }
 
     free(newline);
@@ -182,9 +180,10 @@ char *edit_line(char *buffer, int32_t current_line) {
     buffer_end = strchr(buffer_end, '\n');
 
     char *newline = str_input(stdin);
-    if(newline == NULL) {
+    if(!newline) {
         free(buffer);
         free(buffer_start);
+        printf("edit_line: Newline is equal to NULL\n");
         return NULL;
     }
 
@@ -193,6 +192,14 @@ char *edit_line(char *buffer, int32_t current_line) {
         strlen(newline) + 
         strlen(buffer_end) + 1
     );
+    
+    if(!new_buffer) {
+        free(newline);
+        free(buffer);
+        free(buffer_start);
+        printf("edit_line: Failed to malloc new buffer\n");
+        return NULL;
+    }
 
     sprintf(new_buffer, "%s%s%s",
         buffer_start,
