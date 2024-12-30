@@ -12,7 +12,7 @@ char *file_read(char *filename) {
     }
     fseek(pF, 0, SEEK_END);
     size_t size = ftell(pF);
-    if(size > INT32_MAX) {
+    if(size >= INT32_MAX) {
         printf("file_read: File is longer than an integer\n");
         fclose(pF);
         return NULL;
