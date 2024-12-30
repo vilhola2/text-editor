@@ -56,14 +56,3 @@ void str_print(char *input, int32_t *line_count) {
     }
     putchar('\n');
 }
-
-// Counts all newline characters in a string (unused)
-int32_t str_get_line_count(char *input) {
-    char *buffer = input;
-    int line_count = 0;
-    while((buffer = strchr(buffer, '\n')) != NULL) {
-        ++buffer;
-        ++line_count;
-    }
-    return line_count;
-}
