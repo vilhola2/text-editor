@@ -1,5 +1,6 @@
 #include "text_editor.h"
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@ void print_help(void);
 void remove_line(char *buffer, int32_t current_line);
 char *add_empty_line(char *buffer, int32_t current_line);
 char *add_line(char *buffer, const char mode);
-char *edit_line(char *buffer, int32_t current_line);
+char *edit_line(char *buffer, int32_t current_line, const bool replace);
 int32_t get_current_line(int32_t line_count);
 
 int main(int argc, char **argv) {
@@ -55,13 +56,12 @@ void main_loop(char *filename) {
                 break;
             case 'e':
                 if(!(current_line = get_current_line(line_count))) continue;
-                if(!(buffer = edit_line(buffer, current_line))) return;
+                if(!(buffer = edit_line(buffer, current_line, 1))) return;
                 break;
             case 'n':
                 line_count += 1;
                 if(!(current_line = get_current_line(line_count))) continue;
-                if(!(buffer = add_empty_line(buffer, current_line))) return;
-                if(!(buffer = edit_line(buffer, current_line + 1))) return;
+                if(!(buffer = edit_line(buffer, current_line, 0))) return;
                 break;
             case 'a':
                 line_count += 1;
@@ -85,7 +85,7 @@ void print_help(void) {
         "'e' -- edit a single line\n"
         "'a' -- append a single line to the end of the buffer\n"
         "'i' -- insert a single line to the start of the buffer\n"
-        "'n' -- add a single line after the specified line number\n"
+        "'n' -- add a single line at the specified line number\n"
         "'h' -- print this list\n"
         "'q' -- quit\n"
     );
@@ -94,9 +94,9 @@ void print_help(void) {
 int32_t get_current_line(int32_t line_count) {
     printf("Enter line number: ");
     char *str = str_input(stdin);
-    char *endptr;
-    long current_line = strtol(str, &endptr, 0);
-    if(*endptr != '\0') {
+    char *end;
+    long current_line = strtol(str, &end, 0);
+    if(*end != '\0') {
         printf("Invalid number\n");
         return 0;
     }
@@ -117,30 +117,6 @@ void remove_line(char *buffer, int32_t current_line) {
     int32_t len = end - buffer;
     end = strchr(end, '\n') + 1;
     memmove(buffer + len, end, strlen(end) + 1);
-}
-
-char *add_empty_line(char *buffer, int32_t current_line) {
-    char *p_buffer = buffer;
-
-    for(int i = 0; i < current_line; ++i) {
-        p_buffer = strchr(p_buffer, '\n') + 1;
-    }
-
-    char *new_buffer = malloc(strlen(buffer) + 2);
-    if(!new_buffer) {
-        free(buffer);
-        printf("add_empty_line: Malloc failed\n");
-        return NULL;
-    }
-
-    sprintf(new_buffer, "%.*s\n%s",
-        (int)(p_buffer - buffer),
-        buffer,
-        p_buffer
-    );
-    
-    free(buffer);
-    return new_buffer;
 }
 
 char *add_line(char *buffer, const char mode) {
@@ -168,10 +144,10 @@ char *add_line(char *buffer, const char mode) {
     return new_buffer;
 }
 
-char *edit_line(char *buffer, int32_t current_line) {
-    char *buffer_end = buffer;
+char *edit_line(char *buffer, int32_t current_line, const bool replace) {
+    char *end = buffer;
     for(int i = 1; i < current_line; ++i) {
-        buffer_end = strchr(buffer_end, '\n') + 1;
+        end = strchr(end, '\n') + 1;
     }
 
     char *newline = str_input(stdin);
@@ -181,9 +157,9 @@ char *edit_line(char *buffer, int32_t current_line) {
         return NULL;
     }
 
-    int32_t len = buffer_end - buffer;
+    int32_t len = end - buffer;
     char *new_buffer = malloc (
-        strlen(buffer_end) + 
+        strlen(end) + 
         strlen(newline) + 
         len + 1
     );
@@ -195,11 +171,11 @@ char *edit_line(char *buffer, int32_t current_line) {
         return NULL;
     }
 
-    sprintf(new_buffer, "%.*s%s%s",
+    sprintf(new_buffer, "%.*s%s\n%s",
         len,
         buffer,
         newline,
-        strchr(buffer_end, '\n')
+        ((replace) ? strchr(end, '\n') + 1 : end)
     );
 
     free(newline);
