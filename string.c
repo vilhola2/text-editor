@@ -7,7 +7,7 @@
 
 // Reads input from a given file stream and returns a heap-allocated string
 char *str_input(FILE *stream) {
-    int ch;
+    int32_t ch;
     size_t len = 0;
     size_t bufsize = 16;
     char *buffer = malloc(bufsize);
@@ -18,7 +18,7 @@ char *str_input(FILE *stream) {
 
     while((ch = fgetc(stream)) != EOF && ch != '\n') {
         buffer[len++] = ch;
-        if(len == bufsize) {
+        if(len + 1 == bufsize) {
             char *temp = realloc(buffer, (bufsize += 16));
             if(!temp) {
                 printf("str_input: Realloc failed\n");
@@ -29,15 +29,7 @@ char *str_input(FILE *stream) {
         }
     }
 
-    if(len < bufsize) {
-        char *temp = realloc(buffer, len + 1);
-        if(!temp) {
-            printf("str_input: Realloc failed\n");
-            free(buffer);
-            return NULL;
-        }
-        buffer = temp;
-    }
+    printf("bufsize: %zu\nlen: %zu\n", bufsize, len);
 
     buffer[len] = '\0';
     return buffer;
