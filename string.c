@@ -29,8 +29,6 @@ char *str_input(FILE *stream) {
         }
     }
 
-    printf("bufsize: %zu\nlen: %zu\n", bufsize, len);
-
     buffer[len] = '\0';
     return buffer;
 }
