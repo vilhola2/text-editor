@@ -23,7 +23,7 @@ void line_remove(char *buffer, int32_t current_line) {
 char *line_add(char *buffer, const char mode) {
     char *newline = str_input(stdin);
     char *new_buffer;
-    size_t size = strlen(buffer) + strlen(newline);
+    size_t size = strlen(buffer) + strlen(newline) + 2;
     if(size > INT32_MAX) {
         printf("add_line: Buffer is longer than an integer\n");
         free(buffer);
@@ -31,11 +31,11 @@ char *line_add(char *buffer, const char mode) {
     }
     switch(mode) {
         case 'a':
-            new_buffer = malloc(size + 2);
+            new_buffer = malloc(size);
             sprintf(new_buffer, "%s%s\n", buffer, newline);
             break;
         case 'i':
-            new_buffer = malloc(size + 2);
+            new_buffer = malloc(size);
             sprintf(new_buffer, "%s\n%s", newline, buffer);
             break;
         default:
