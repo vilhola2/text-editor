@@ -21,7 +21,7 @@ void line_remove(char *buffer, int32_t current_line) {
 
 // Adds a line at the end or the beginning. Modes: 'a' -- append, 'i' -- insert 
 char *line_add(char *buffer, const char mode) {
-    char *newline;
+    char *newline = str_input(stdin);
     char *new_buffer;
     size_t size = strlen(buffer) + strlen(newline);
     if(size > INT32_MAX) {
@@ -31,12 +31,10 @@ char *line_add(char *buffer, const char mode) {
     }
     switch(mode) {
         case 'a':
-            newline = str_input(stdin);
             new_buffer = malloc(size + 2);
             sprintf(new_buffer, "%s%s\n", buffer, newline);
             break;
         case 'i':
-            newline = str_input(stdin);
             new_buffer = malloc(size + 2);
             sprintf(new_buffer, "%s\n%s", newline, buffer);
             break;
