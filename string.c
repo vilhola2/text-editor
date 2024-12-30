@@ -7,7 +7,7 @@
 
 // Reads input from a given file stream and returns a heap-allocated string
 char *str_input(FILE *stream) {
-    int32_t ch;
+    int ch;
     size_t len = 0;
     size_t bufsize = 16;
     char *buffer = malloc(bufsize);
