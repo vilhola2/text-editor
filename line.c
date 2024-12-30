@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Asks the user for a line number
 int32_t get_current_line(int32_t line_count) {
     printf("Enter line number: ");
     char *str = str_input(stdin);
@@ -22,6 +23,7 @@ int32_t get_current_line(int32_t line_count) {
     return (int32_t)current_line;
 }
 
+// Removes the line at 'current_line'
 void remove_line(char *buffer, int32_t current_line) {
     char *end = buffer;
 
@@ -34,6 +36,7 @@ void remove_line(char *buffer, int32_t current_line) {
     memmove(buffer + len, end, strlen(end) + 1);
 }
 
+// Adds a line at the end or the beginning. Modes: 'a' -- append, 'i' -- insert 
 char *add_line(char *buffer, const char mode) {
     char *newline;
     char *new_buffer;
@@ -64,6 +67,7 @@ char *add_line(char *buffer, const char mode) {
     return new_buffer;
 }
 
+// Replaces or adds a line at 'current_line' 
 char *edit_line(char *buffer, int32_t current_line, const bool replace_line) {
     char *end = buffer;
     for(int i = 1; i < current_line; ++i) {
