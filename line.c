@@ -6,25 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Asks the user for a line number
-int32_t get_current_line(int32_t line_count) {
-    printf("Enter line number: ");
-    char *str = str_input(stdin);
-    char *end;
-    long current_line = strtol(str, &end, 0);
-    if(*end != '\0') {
-        printf("Invalid number\n");
-        return 0;
-    }
-    if(current_line > line_count || current_line <= 0) {
-        printf("Invalid line number\n");
-        return 0;
-    }
-    return (int32_t)current_line;
-}
-
 // Removes the line at 'current_line'
-void remove_line(char *buffer, int32_t current_line) {
+void line_remove(char *buffer, int32_t current_line) {
     char *end = buffer;
 
     for(int i = 1; i < current_line; ++i) {
@@ -37,7 +20,7 @@ void remove_line(char *buffer, int32_t current_line) {
 }
 
 // Adds a line at the end or the beginning. Modes: 'a' -- append, 'i' -- insert 
-char *add_line(char *buffer, const char mode) {
+char *line_add(char *buffer, const char mode) {
     char *newline;
     char *new_buffer;
     size_t size = strlen(buffer) + strlen(newline);
@@ -68,7 +51,7 @@ char *add_line(char *buffer, const char mode) {
 }
 
 // Replaces or adds a line at 'current_line' 
-char *edit_line(char *buffer, int32_t current_line, const bool replace_line) {
+char *line_edit(char *buffer, int32_t current_line, const bool replace_line) {
     char *end = buffer;
     for(int i = 1; i < current_line; ++i) {
         end = strchr(end, '\n') + 1;

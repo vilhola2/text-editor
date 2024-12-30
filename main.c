@@ -6,6 +6,7 @@
 
 void main_loop(char *filename);
 void print_help(void);
+int32_t get_current_line(int32_t line_count);
 
 int main(int argc, char **argv) {
     if(argc != 2) {
@@ -44,25 +45,25 @@ void main_loop(char *filename) {
                 break;
             case 'd':
                 if(!(current_line = get_current_line(line_count))) continue;
-                remove_line(buffer, current_line);
+                line_remove(buffer, current_line);
                 line_count -= 1;
                 break;
             case 'e':
                 if(!(current_line = get_current_line(line_count))) continue;
-                if(!(buffer = edit_line(buffer, current_line, true))) return;
+                if(!(buffer = line_edit(buffer, current_line, true))) return;
                 break;
             case 'n':
                 line_count += 1;
                 if(!(current_line = get_current_line(line_count))) continue;
-                if(!(buffer = edit_line(buffer, current_line, false))) return;
+                if(!(buffer = line_edit(buffer, current_line, false))) return;
                 break;
             case 'a':
                 line_count += 1;
-                buffer = add_line(buffer, 'a');
+                buffer = line_add(buffer, 'a');
                 break;
             case 'i':
                 line_count += 1;
-                buffer = add_line(buffer, 'i');
+                buffer = line_add(buffer, 'i');
                 break;
             default:
                 printf("Invalid option!\n");
@@ -82,4 +83,20 @@ void print_help(void) {
         "'h' -- print this list\n"
         "'q' -- quit\n"
     );
+}
+
+int32_t get_current_line(int32_t line_count) {
+    printf("Enter line number: ");
+    char *str = str_input(stdin);
+    char *end;
+    long current_line = strtol(str, &end, 0);
+    if(*end != '\0') {
+        printf("Invalid number\n");
+        return 0;
+    }
+    if(current_line > line_count || current_line <= 0) {
+        printf("Invalid line number\n");
+        return 0;
+    }
+    return (int32_t)current_line;
 }
