@@ -114,7 +114,7 @@ void remove_line(char *buffer, int32_t current_line) {
         end = strchr(end, '\n') + 1;
     }
 
-    size_t len = end - buffer;
+    int32_t len = end - buffer;
     end = strchr(end, '\n') + 1;
     memmove(buffer + len, end, strlen(end) + 1);
 }
@@ -169,46 +169,40 @@ char *add_line(char *buffer, const char mode) {
 }
 
 char *edit_line(char *buffer, int32_t current_line) {
-    char *buffer_start = strdup(buffer);
     char *buffer_end = buffer;
-
     for(int i = 1; i < current_line; ++i) {
         buffer_end = strchr(buffer_end, '\n') + 1;
     }
 
-    buffer_start[buffer_end - buffer] = '\0';
-    buffer_end = strchr(buffer_end, '\n');
-
     char *newline = str_input(stdin);
     if(!newline) {
         free(buffer);
-        free(buffer_start);
-        printf("edit_line: Newline is equal to NULL\n");
+        printf("edit_line: Newline is NULL\n");
         return NULL;
     }
 
+    int32_t len = buffer_end - buffer;
     char *new_buffer = malloc (
-        strlen(buffer_start) + 
+        strlen(buffer_end) + 
         strlen(newline) + 
-        strlen(buffer_end) + 1
+        len + 1
     );
     
     if(!new_buffer) {
         free(newline);
         free(buffer);
-        free(buffer_start);
         printf("edit_line: Failed to malloc new buffer\n");
         return NULL;
     }
 
-    sprintf(new_buffer, "%s%s%s",
-        buffer_start,
+    sprintf(new_buffer, "%.*s%s%s",
+        len,
+        buffer,
         newline,
-        buffer_end
+        strchr(buffer_end, '\n')
     );
 
     free(newline);
     free(buffer);
-    free(buffer_start);
     return new_buffer;
 }
