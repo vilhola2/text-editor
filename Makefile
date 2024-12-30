@@ -10,6 +10,7 @@ OBJECTS=\
 		main.o \
 		file.o \
 		io.o \
+		line.o \
 		string.o \
 
 all: text_editor

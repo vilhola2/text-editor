@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -12,5 +13,11 @@ void file_write(char *filename, char *input);
 char *str_input(FILE *stream);
 int32_t str_get_line_count(char *input);
 void str_print(char *input, int32_t *line_count);
+
+void remove_line(char *buffer, int32_t current_line);
+char *add_empty_line(char *buffer, int32_t current_line);
+char *add_line(char *buffer, const char mode);
+char *edit_line(char *buffer, int32_t current_line, const bool replace_line);
+int32_t get_current_line(int32_t line_count);
 
 #endif
